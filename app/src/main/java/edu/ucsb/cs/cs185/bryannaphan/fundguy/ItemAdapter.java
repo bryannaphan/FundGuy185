@@ -2,13 +2,17 @@ package edu.ucsb.cs.cs185.bryannaphan.fundguy;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 
 /**
@@ -39,8 +43,15 @@ public class ItemAdapter extends BaseAdapter {
         }
         TextView title = (TextView) convertView.findViewById(R.id.single_item_title);
         TextView amount  = (TextView) convertView.findViewById(R.id.single_item_amount);
+        TextView date = (TextView) convertView.findViewById(R.id.date);
+        TextView category = (TextView) convertView.findViewById(R.id.single_item_category);
+        //ImageView iv = (ImageView) convertView.findViewById(R.id.test_view);
+
+        //iv.setImageBitmap(ItemManager.getInstance().get(position).getBitmap());
+        date.setText(ItemManager.getInstance().get(position).getDate());
         title.setText(ItemManager.getInstance().get(position).getTitle());
         amount.setText(String.format("%.2f", ItemManager.getInstance().get(position).getAmount()));
+        category.setText(ItemManager.getInstance().get(position).getCategory());
         return convertView;
     }
 

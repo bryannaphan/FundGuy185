@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,7 @@ public class AddFragment extends DialogFragment  {
     Boolean edit;
     Item item;
     private static int SELECT_PICTURE = 1;
+    Bitmap bm;
 
 
 
@@ -55,6 +58,7 @@ public class AddFragment extends DialogFragment  {
     public AddFragment() {
         edit = false;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,6 +85,7 @@ public class AddFragment extends DialogFragment  {
             }
         });
 
+
         final EditText title = (EditText) in.findViewById(R.id.purchase_title);
         final EditText amount = (EditText) in.findViewById(R.id.amount);
         final EditText  description = (EditText) in.findViewById(R.id.description);
@@ -103,8 +108,9 @@ public class AddFragment extends DialogFragment  {
             public void onClick(View view) {
                 // ONLY CREATE NOW, ADD EDIT FUNCTIONALITY LATER
                 // ALSO NEED TO ADD THE BITMAP STUFF
+
                 Item newItem = new Item(title.getText().toString(), Float.parseFloat(amount.getText().toString()),
-                        description.getText().toString(), category.getSelectedItem().toString());
+                        description.getText().toString(), category.getSelectedItem().toString(), bm);
                 ItemManager im = ItemManager.getInstance();
                 im.add(newItem);
                 AddFragment.this.dismiss();
@@ -120,18 +126,16 @@ public class AddFragment extends DialogFragment  {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //ImageView imageView;
-
-        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
             try {
-                Uri uri = data.getData();
-
-                //ItemManager.getInstance().add(getContentResolver(), uri);
-
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage());
+                bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+                ItemManager manager = ItemManager.getInstance();
+            } catch (IOException e) {
+                System.err.println("Caught IOException: " + e.getMessage());
             }
+        }
         }
     }
 
 
-}

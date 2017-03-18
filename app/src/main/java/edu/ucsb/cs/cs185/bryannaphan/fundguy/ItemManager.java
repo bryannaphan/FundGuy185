@@ -18,6 +18,8 @@ public class ItemManager {
     private static ItemManager instance = new ItemManager();
     private ItemManagerListener listener;
 
+
+
     public static ItemManager getInstance() {
         if (instance == null)
             instance = new ItemManager();
